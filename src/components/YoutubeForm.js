@@ -11,12 +11,15 @@ import {
   Formik, Form, Field, ErrorMessage,
 } from 'formik';
 import * as Yup from 'yup';
+import TextError from './TextError';
 
 // 2. initial value formik
 const initialValues = {
   name: '',
   email: '',
   channel: '',
+  comments: '',
+  address: '',
 };
 
 const onSubmit = (values) => {
@@ -49,19 +52,42 @@ const YoutubeForm = () => (
           <label htmlFor="name">Name</label>
           {/* 3. add props onChange and value in ech form type */}
           <Field type="text" id="name" name="name" />
-          <ErrorMessage name="name" />
+          <ErrorMessage name="name" component={TextError} />
         </div>
 
         <div className="form-control">
           <label htmlFor="email">Email</label>
           <Field type="email" id="email" name="email" />
-          <ErrorMessage name="email" />
+          <ErrorMessage name="email">
+            {
+              (errorMessage) => <div style={{ color: 'red' }}>{errorMessage}</div>
+            }
+          </ErrorMessage>
         </div>
 
         <div className="form-control">
           <label htmlFor="channel">Channel</label>
-          <Field type="text" id="channel" name="channel" />
-          <ErrorMessage name="channel" />
+          <Field type="text" id="channel" name="channel" placeholder="Youtube Channel" />
+          <ErrorMessage name="channel" component={TextError} />
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="address">Address</label>
+          <Field name="address">
+            {({ field, meta }) => (
+              <div>
+                <input type="text" {...field} />
+                {meta.touched && meta.error ? (
+                  <div>{meta.error}</div>
+                ) : null}
+              </div>
+            )}
+          </Field>
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="comments">Comments</label>
+          <Field as="textarea" type="text" id="comments" name="comments" />
         </div>
 
         <button style={{ float: 'right' }} type="submit">Submit</button>
